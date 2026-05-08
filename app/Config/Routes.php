@@ -9,6 +9,8 @@ $routes->get('/', 'Home::index');
 $routes->options('api/ping', 'PingController::index');
 $routes->head('api/ping', 'PingController::index');
 
+$routes->post('api/receipt/generate', 'ReceiptController::generateReceipt');
+
 $routes->group('api/auth', function ($routes) {
   $routes->post('login', 'AuthController::login');
   $routes->post('register', 'AuthController::register');
