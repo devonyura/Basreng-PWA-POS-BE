@@ -75,7 +75,9 @@ class BranchController extends ResourceController
   {
     $rules = [
       'branch_name'    => 'required|min_length[3]',
-      'branch_address' => 'required|min_length[5]'
+      'branch_address' => 'required|min_length[5]',
+      'latitude'       => 'permit_empty|decimal',
+      'longitude'      => 'permit_empty|decimal'
     ];
 
     if (!$this->validate($rules)) {
@@ -85,7 +87,9 @@ class BranchController extends ResourceController
     $data = $this->request->getJSON();
     $insertData = [
       'branch_name'    => $data->branch_name,
-      'branch_address' => $data->branch_address
+      'branch_address' => $data->branch_address,
+      'latitude'       => $data->latitude ?? null,
+      'longitude'      => $data->longitude ?? null,
     ];
 
     try {
@@ -125,7 +129,9 @@ class BranchController extends ResourceController
     $data = $this->request->getJSON();
     $rules = [
       'branch_name'    => 'required|min_length[3]',
-      'branch_address' => 'required|min_length[5]'
+      'branch_address' => 'required|min_length[5]',
+      'latitude'       => 'permit_empty|decimal',
+      'longitude'      => 'permit_empty|decimal'
     ];
 
     if (!$this->model->find($id)) {
@@ -139,7 +145,9 @@ class BranchController extends ResourceController
 
     $updateData = [
       'branch_name'    => $data->branch_name,
-      'branch_address' => $data->branch_address
+      'branch_address' => $data->branch_address,
+      'latitude'       => $data->latitude ?? null,
+      'longitude'      => $data->longitude ?? null,
     ];
 
     try {
@@ -221,6 +229,54 @@ class BranchController extends ResourceController
       ]);
     } catch (Exception $e) {
       $this->createLog('DELETE_BRANCH', ['ERROR']);
+      return Services::response()
+        ->setJSON([
+          'status'  => 'error',
+          'message' => 'Terjadi kesalahan pada server.',
+          'error'   => $e->getMessage()
+        ])
+        ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+    }
+  }
+  // GET /api/branch/nearest?lat={lat}&lng={lng}
+  public function nearest()
+  {
+    $lat = $this->request->getGet('lat');
+    $lng = $this->request->getGet('lng');
+
+    if (!$lat || !$lng) {
+      return $this->fail('Latitude and Longitude are required', ResponseInterface::HTTP_BAD_REQUEST);
+    }
+
+    try {
+      $db = \Config\Database::connect();
+      
+      // Radius 100 meters = 0.1 KM
+      $radius = 0.1; 
+      
+      // Haversine Formula
+      $sql = "SELECT *, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance 
+              FROM branch 
+              HAVING distance <= ? 
+              ORDER BY distance ASC 
+              LIMIT 1";
+
+      $query = $db->query($sql, [$lat, $lng, $lat, $radius]);
+      $result = $query->getRow();
+
+      if (!$result) {
+        return $this->respond([
+          'status' => 'success',
+          'data'   => null,
+          'message' => 'Tidak ada cabang dalam radius 100 meter'
+        ]);
+      }
+
+      return $this->respond([
+        'status' => 'success',
+        'data'   => $result
+      ]);
+    } catch (Exception $e) {
       return Services::response()
         ->setJSON([
           'status'  => 'error',
