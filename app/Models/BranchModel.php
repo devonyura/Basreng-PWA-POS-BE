@@ -11,6 +11,8 @@ class BranchModel extends Model
   protected $allowedFields = [
     'branch_name',
     'branch_address',
+    'latitude',
+    'longitude',
   ];
   protected $useTimestamps = true;
   protected $dateFormat    = 'datetime';

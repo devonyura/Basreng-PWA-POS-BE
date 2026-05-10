@@ -57,6 +57,7 @@ $routes->group('api', ['filter' => 'auth'], function ($routes) {
   $routes->resource('packages', ['controller' => 'PackageController']);
   $routes->resource('categories', ['controller' => 'CategoriesController']);
   $routes->resource('subcategories', ['controller' => 'SubCategoriesController']);
+  $routes->get('branch/nearest', 'BranchController::nearest');
   $routes->resource('branch', ['controller' => 'BranchController']);
   $routes->resource('resellers', ['controller' => 'ResellersController']);
 
