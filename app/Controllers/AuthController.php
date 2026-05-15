@@ -73,7 +73,7 @@ class AuthController extends ResourceController
         'id' => $user['id'],
         'username' => $user['username'],
         'role' => $user['role'],
-        'branch_id' => $user['branch_id']
+        'branch_id' => $data->branch_id ?? null
       ]
     );
 

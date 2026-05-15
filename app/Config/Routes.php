@@ -20,6 +20,8 @@ $routes->group('api', ['filter' => 'jwtAuth'], function ($routes) {
   $routes->get('report/summary', 'ReportController::summary');
 });
 
+$routes->resource('branch', ['controller' => 'BranchController']);
+
 $routes->group('api', ['filter' => 'auth'], function ($routes) {
   // Reports endpoint
   $routes->get('reports/daily', 'ReportsController::daily');
@@ -58,7 +60,6 @@ $routes->group('api', ['filter' => 'auth'], function ($routes) {
   $routes->resource('categories', ['controller' => 'CategoriesController']);
   $routes->resource('subcategories', ['controller' => 'SubCategoriesController']);
   $routes->get('branch/nearest', 'BranchController::nearest');
-  $routes->resource('branch', ['controller' => 'BranchController']);
   $routes->resource('resellers', ['controller' => 'ResellersController']);
 
   $routes->get('product-variants/product/(:num)', 'ProductVariantsController::byProduct/$1');
