@@ -594,55 +594,6 @@ class ReportController extends ResourceController
     }
 
     // =========================
-    // 4. BUILD CHART CONFIG
-    // =========================
-    // $chartConfig = [
-    //   "type" => "line",
-    //   "data" => [
-    //     "labels" => array_map(fn($h) => sprintf("%02d.00", $h), $labels),
-    //     "datasets" => []
-    //   ],
-    //   "options" => [
-    //     "plugins" => [
-    //       "title" => [
-    //         "display" => true,
-    //         "text" => "Grafik Penjualan Harian per Jam (dalam ribuan Rupiah)"
-    //       ],
-    //       "legend" => [
-    //         "position" => "bottom"
-    //       ]
-    //     ],
-    //     "elements" => [
-    //       "line" => [
-    //         "tension" => 0.3 // smooth line
-    //       ]
-    //     ]
-    //   ]
-    // ];
-
-    // =========================
-    // 5. WARNA + DATASET
-    // =========================
-    // $colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#8e44ad'];
-
-    // $i = 0;
-    // foreach ($datasets as $branch => $data) {
-    //   $chartConfig["data"]["datasets"][] = [
-    //     "label" => $branch,
-    //     "data" => array_values($data),
-    //     "fill" => false,
-    //     "borderColor" => $colors[$i % count($colors)],
-    //     "pointRadius" => 3
-    //   ];
-    //   $i++;
-    // }
-
-    // =========================
-    // 6. GENERATE URL
-    // =========================
-    // $chartUrl = "https://quickchart.io/chart?width=500&height=300&c=" . urlencode(json_encode($chartConfig));
-
-    // =========================
     // 2. GENERATE HTML (TEMPLATE)
     // =========================
     $html = view('pdf/daily_report', [
