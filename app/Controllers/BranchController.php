@@ -181,21 +181,6 @@ class BranchController extends ResourceController
 
       $db = \Config\Database::connect();
 
-      // Cek relasi dengan tabel users
-      $usedByUsers = $db->table('users')
-        ->where('branch_id', $id)
-        ->countAllResults();
-
-      if ($usedByUsers > 0) {
-        $this->createLog('DELETE_BRANCH', ['ERROR: Digunakan oleh tabel users.']);
-        return Services::response()
-          ->setJSON([
-            'status'  => 'error',
-            'message' => 'Branch tidak dapat dihapus karena masih digunakan oleh user.'
-          ])
-          ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST);
-      }
-
       // Cek relasi dengan tabel transactions
       $usedByTransactions = $db->table('transactions')
         ->where('branch_id', $id)

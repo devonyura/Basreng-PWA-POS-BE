@@ -67,13 +67,23 @@ class AuthController extends ResourceController
         ->setStatusCode(401);
     }
 
+    // Validate that branch_id is provided
+    if (!isset($data->branch_id)) {
+        return Services::response()
+            ->setJSON([
+                'status' => 'fail',
+                'message' => 'Branch ID harus dipilih',
+            ])
+            ->setStatusCode(400);
+    }
+
     // Generate JWT
     $token = $jwtHelper->generateJWT(
       [
         'id' => $user['id'],
         'username' => $user['username'],
         'role' => $user['role'],
-        'branch_id' => $user['branch_id']
+        'branch_id' => $data->branch_id
       ]
     );
 

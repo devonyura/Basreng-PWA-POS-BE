@@ -80,7 +80,6 @@ class UsersController extends ResourceController
       'data'   => [
         'id' => $data['id'],
         'username' => $data['username'],
-        'branch_id' => $data['branch_id'],
         'role' => $data['role'],
       ]
     ]);

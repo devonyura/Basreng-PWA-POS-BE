@@ -10,6 +10,8 @@ $routes->options('api/ping', 'PingController::index');
 $routes->head('api/ping', 'PingController::index');
 
 $routes->post('api/receipt/generate', 'ReceiptController::generateReceipt');
+$routes->resource('branch', ['controller' => 'BranchController']);
+
 
 $routes->group('api/auth', function ($routes) {
   $routes->post('login', 'AuthController::login');
@@ -58,7 +60,6 @@ $routes->group('api', ['filter' => 'auth'], function ($routes) {
   $routes->resource('categories', ['controller' => 'CategoriesController']);
   $routes->resource('subcategories', ['controller' => 'SubCategoriesController']);
   $routes->get('branch/nearest', 'BranchController::nearest');
-  $routes->resource('branch', ['controller' => 'BranchController']);
   $routes->resource('resellers', ['controller' => 'ResellersController']);
 
   $routes->get('product-variants/product/(:num)', 'ProductVariantsController::byProduct/$1');
