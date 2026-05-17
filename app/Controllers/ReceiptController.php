@@ -32,6 +32,7 @@ class ReceiptController extends ResourceController
                 'body'   => 15, // Teks Umum
                 'title'  => 16, // Judul Section
                 'total'  => 22, // Angka Total (Besar)
+                'shopee' => 19, // Shopee Code
                 'footer' => 14, // Ucapan
                 'small'  => 12   // Versi app
             ];
@@ -90,6 +91,12 @@ class ReceiptController extends ResourceController
 
             // --- TOTALS ---
             $this->drawRow($img, "Pembayaran", strtoupper($trx->payment_method), $y, $black, $width, $fSize['body']); $y += 25;
+            if (!empty($trx->shopee_code)) {
+                $this->drawText($img, "Shopee Code:", $padding, $y, $black, $fSize['shopee']);
+                $y += $fSize['shopee'] + 5;
+                $this->drawWrappedText($img, $trx->shopee_code, $padding, $y, $black, $fSize['shopee'], $maxWidth);
+                $y += 10;
+            }
             $this->drawDashedLine($img, 0, $y, $width, $black); $y += 20;
             $this->drawRow($img, "TOTAL", $this->formatRupiah($trx->total_price), $y, $black, $width, $fSize['total']); $y += 40;
             $this->drawDashedLine($img, 0, $y, $width, $black); $y += 20;
@@ -171,6 +178,25 @@ class ReceiptController extends ResourceController
                 $line = $word;
             } else {
                 $line = $testLine;
+            }
+
+            // Handle word longer than maxWidth
+            $bboxWord = imagettfbbox($fontSize, 0, $this->fontPath, $line);
+            if ($bboxWord[2] - $bboxWord[0] > $maxWidth) {
+                $chars = preg_split('//u', $line, -1, PREG_SPLIT_NO_EMPTY);
+                $subLine = "";
+                foreach ($chars as $char) {
+                    $testSub = $subLine . $char;
+                    $bboxSub = imagettfbbox($fontSize, 0, $this->fontPath, $testSub);
+                    if ($bboxSub[2] - $bboxSub[0] <= $maxWidth) {
+                        $subLine = $testSub;
+                    } else {
+                        $this->drawText($img, $subLine, $x, $y, $color, $fontSize, $center);
+                        $y += $lineHeight;
+                        $subLine = $char;
+                    }
+                }
+                $line = $subLine;
             }
         }
         $this->drawText($img, $line, $x, $y, $color, $fontSize, $center);
