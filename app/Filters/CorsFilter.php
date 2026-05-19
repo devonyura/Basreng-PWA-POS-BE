@@ -11,7 +11,7 @@ class CorsFilter implements FilterInterface
 	public function before(RequestInterface $request, $arguments = null)
 	{
 		// Allowed origins (sesuaikan dengan domain React kamu)
-		$allowedOrigins = ['http://localhost:8100', 'http://localhost:4173', 'https://app.rindapermai.com'];
+		$allowedOrigins = ['http://localhost:8100', 'http://localhost:4173', 'https://app.rindapermai.com', 'https://app.basrenghosting.biz.id'];
 
 		$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
 
